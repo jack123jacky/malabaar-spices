@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Account - Malabar Spice. View bookings, check-in, and leave reviews.">
+    <title>My Account | Malabar Spice</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/account.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+            </svg>
+            82 - 455 7990
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="account.html" class="active nav-account-link">
+                    <span class="nav-account-dot" id="navDot" style="display:none;"></span>My Account
+                </a></li>
+            <li><a href="contact.html" class="btn btn-reserve">Reserve</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- ============ LOGIN SECTION ============ -->
+    <div id="loginSection" style="display:none;">
+        <div class="login-page">
+            <div class="login-card">
+                <div class="brand">Malabar Spice</div>
+                <div class="brand-sub">Kerala Fine Dining</div>
+                <div class="login-divider">
+                    <div class="line"></div>
+                    <span>&#10070;</span>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Step 1: Phone -->
+                <div class="login-step active" id="stepPhone">
+                    <h2>Welcome Back</h2>
+                    <p class="login-sub">Enter your phone number to sign in or create an account.</p>
+                    <input type="text" class="login-name-input" id="loginName"
+                        placeholder="Your Name (for new accounts)" maxlength="40">
+                    <div class="login-input-group">
+                        <span class="prefix">+91</span>
+                        <input type="tel" id="loginPhone" placeholder="9876 543 210" maxlength="10" inputmode="numeric"
+                            oninput="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="login-error" id="phoneError">Please enter a valid 10-digit phone number.</div>
+                    <button class="btn-login" onclick="sendOTP()">Send OTP &rarr;</button>
+                </div>
+
+                <!-- Step 2: OTP -->
+                <div class="login-step" id="stepOTP">
+                    <h2>Enter OTP</h2>
+                    <p class="login-sub" id="otpSubtext">We sent a 4-digit code to <strong>+91 XXXXXXXXXX</strong></p>
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" inputmode="numeric" id="otp1"
+                            oninput="otpInput(this, null, 'otp2')">
+                        <input type="text" maxlength="1" inputmode="numeric" id="otp2"
+                            oninput="otpInput(this, 'otp1', 'otp3')">
+                        <input type="text" maxlength="1" inputmode="numeric" id="otp3"
+                            oninput="otpInput(this, 'otp2', 'otp4')">
+                        <input type="text" maxlength="1" inputmode="numeric" id="otp4"
+                            oninput="otpInput(this, 'otp3', null)">
+                    </div>
+                    <p class="otp-note">Demo mode: enter any 4 digits. <span onclick="backToPhone()">&#8592; Change
+                            number</span></p>
+                    <div class="login-error" id="otpError">Incorrect code. Please try again.</div>
+                    <button class="btn-login" onclick="verifyOTP()">Verify &amp; Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ DASHBOARD SECTION ============ -->
+    <div id="dashboardSection" style="display:none;">
+
+        <!-- Dashboard Hero -->
+        <div class="dashboard-page">
+            <div class="dashboard-hero">
+                <div class="dashboard-hero-left">
+                    <h1>My Account</h1>
+                    <p class="welcome-sub">Welcome to your Malabar Spice account</p>
+                    <div class="phone-badge" id="dashPhone">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                        </svg>
+                        +91 <span id="dashPhoneNum">—</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+            </div>
+
+            <div class="dashboard-body">
+
+                <!-- Active Booking -->
+                <div class="dash-section-title">Active Reservation</div>
+                <div id="activeBookingArea"></div>
+
+                <!-- Booking History -->
+                <div class="dash-section-title">Booking History</div>
+                <div id="bookingHistoryArea"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ REVIEW MODAL ============ -->
+    <div class="review-modal-overlay" id="reviewModal">
+        <div class="review-modal">
+            <button class="rm-close" onclick="closeReviewModal()">&#10005;</button>
+
+            <div id="reviewFormSection">
+                <h3>Rate Your Visit</h3>
+                <p class="rm-sub">Share your experience at Malabar Spice to help other diners.</p>
+
+                <div class="star-rating" id="starRating">
+                    <input type="radio" name="rating" id="s5" value="5"><label for="s5">&#9733;</label>
+                    <input type="radio" name="rating" id="s4" value="4"><label for="s4">&#9733;</label>
+                    <input type="radio" name="rating" id="s3" value="3"><label for="s3">&#9733;</label>
+                    <input type="radio" name="rating" id="s2" value="2"><label for="s2">&#9733;</label>
+                    <input type="radio" name="rating" id="s1" value="1"><label for="s1">&#9733;</label>
+                </div>
+
+                <textarea id="reviewComment"
+                    placeholder="Tell us about your dining experience — the food, ambiance, service…"></textarea>
+                <button class="btn-login" onclick="submitReview()" style="margin-top:0;">Submit Review</button>
+            </div>
+
+            <div class="review-submitted" id="reviewSuccess" style="display:none;">
+                <div class="check">🌿</div>
+                <h4>Thank You!</h4>
+                <p>Your review has been shared. We appreciate your feedback.</p>
+                <button class="btn-login" onclick="closeReviewModal()"
+                    style="margin-top:20px; width:auto; padding:10px 24px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // ---- State ----
+        let pendingPhone = '';
+        let pendingName = '';
+        let reviewingBookingId = null;
+        let timerInterval = null;
+
+        // ---- Init ----
+        async function init() {
+            const user = await MS.fetchUser();
+            if (user) {
+                await showDashboard(user);
+            } else {
+                showLogin();
+            }
+            updateNavDot();
+        }
+
+        function updateNavDot() {
+            const dot = document.getElementById('navDot');
+            if (dot) dot.style.display = MS.isLoggedIn() ? 'block' : 'none';
+        }
+
+        // ---- Login Flow ----
+        function showLogin() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboardSection').style.display = 'none';
+        }
+
+        function sendOTP() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const name = document.getElementById('loginName').value.trim();
+            const err = document.getElementById('phoneError');
+
+            if (phone.length !== 10) {
+                err.style.display = 'block';
+                return;
+            }
+            err.style.display = 'none';
+            pendingPhone = phone;
+            pendingName = name;
+
+            // Show OTP step
+            document.getElementById('otpSubtext').innerHTML =
+                `We sent a 4-digit code to <strong>+91 ${phone}</strong>`;
+            document.getElementById('stepPhone').classList.remove('active');
+            document.getElementById('stepOTP').classList.add('active');
+            document.getElementById('otp1').focus();
+        }
+
+        function backToPhone() {
+            document.getElementById('stepOTP').classList.remove('active');
+            document.getElementById('stepPhone').classList.add('active');
+            ['otp1', 'otp2', 'otp3', 'otp4'].forEach(id => document.getElementById(id).value = '');
+        }
+
+        function otpInput(el, prevId, nextId) {
+            el.value = el.value.replace(/\D/g, '');
+            if (el.value && nextId) document.getElementById(nextId).focus();
+        }
+
+        async function verifyOTP() {
+            const code = ['otp1', 'otp2', 'otp3', 'otp4'].map(id => document.getElementById(id).value).join('');
+            if (code.length < 4) {
+                document.getElementById('otpError').style.display = 'block';
+                return;
+            }
+            // Accept any 4-digit code (demo mode)
+            document.getElementById('otpError').style.display = 'none';
+            const user = await MS.login(pendingPhone, pendingName);
+            await showDashboard(user);
+            updateNavDot();
+        }
+
+        function doLogout() {
+            MS.logout();
+            clearInterval(timerInterval);
+            showLogin();
+            updateNavDot();
+        }
+
+        // ---- Dashboard ----
+        async function showDashboard(user) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            document.getElementById('dashPhoneNum').textContent = user.phone;
+            await renderActiveBooking();
+            await renderHistory();
+        }
+
+        // ---- Active Booking ----
+        async function renderActiveBooking() {
+            const area = document.getElementById('activeBookingArea');
+            const bk = await MS.getActiveBooking();
+
+            if (!bk) {
+                area.innerHTML = `
+          <div class="no-active-booking">
+            <p>You have no active reservation right now.</p>
+            <a href="contact.html" class="btn btn-primary" style="font-size:13px; padding:10px 24px;">Book a Table</a>
+          </div>`;
+                return;
+            }
+
+            const now = Date.now();
+            const inGrace = now >= bk.sessionStart && now <= bk.graceEnd;
+            const canArrive = now >= (bk.sessionStart - 30 * 60 * 1000) && now <= bk.graceEnd; // 30 min early allowed
+
+            let arrivalHTML = '';
+            if (bk.arrived) {
+                arrivalHTML = `<div class="arrived-confirmed">✅ Checked In — Enjoy your meal!</div>`;
+            } else if (canArrive) {
+                arrivalHTML = `<button class="btn-arrived" id="arrivedBtn" onclick="handleArrival('${bk.id}')">
+          &#9679; I've Arrived
+        </button>`;
+            } else if (now < bk.sessionStart - 30 * 60 * 1000) {
+                arrivalHTML = `<span style="font-size:13px; color:rgba(255,255,255,0.4);">Check-in opens 30 min before your slot</span>`;
+            }
+
+            area.innerHTML = `
+        <div class="active-booking-card">
+          <div class="abc-inner">
+            <div class="abc-top">
+              <div>
+                <div class="abc-badge">&#9679; Active Reservation</div>
+                <div class="abc-title">${bk.date} &nbsp;·&nbsp; ${bk.time}</div>
+              </div>
+              <div class="abc-timer">
+                <div class="timer-label" id="timerLabel">TIME REMAINING</div>
+                <div class="timer-display" id="timerDisplay">--:--:--</div>
+              </div>
+            </div>
+            <div class="abc-details">
+              <div class="abc-detail-item">
+                <div class="label">Table(s)</div>
+                <div class="value">${bk.tableNums.join(', ')}</div>
+              </div>
+              <div class="abc-detail-item">
+                <div class="label">Zone</div>
+                <div class="value">${bk.zone}</div>
+              </div>
+              <div class="abc-detail-item">
+                <div class="label">Guests</div>
+                <div class="value">${bk.guests}</div>
+              </div>
+              <div class="abc-detail-item">
+                <div class="label">Duration</div>
+                <div class="value">2 Hours</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              ${arrivalHTML}
+              ${inGrace && !bk.arrived ? `<span style="font-size:12px; color:#fbbf24;">⚠ Grace period active — please check in</span>` : ''}
+            </div>
+          </div>
+        </div>`;
+
+            startTimer(bk);
+        }
+
+        function startTimer(bk) {
+            clearInterval(timerInterval);
+            function tick() {
+                const display = document.getElementById('timerDisplay');
+                const label = document.getElementById('timerLabel');
+                if (!display) { clearInterval(timerInterval); return; }
+
+                const now = Date.now();
+                let diff = 0;
+
+                if (now < bk.sessionStart) {
+                    // Before session: count down to start
+                    diff = bk.sessionStart - now;
+                    if (label) label.textContent = 'SESSION STARTS IN';
+                    display.className = 'timer-display';
+                } else if (now < bk.sessionEnd) {
+                    // During session: count down to end
+                    diff = bk.sessionEnd - now;
+                    if (label) label.textContent = 'TIME REMAINING';
+                    display.className = now < bk.graceEnd ? 'timer-display grace' : 'timer-display';
+                } else {
+                    // Ended
+                    display.textContent = 'Session Ended';
+                    display.className = 'timer-display ended';
+                    if (label) label.textContent = 'RESERVATION';
+                    clearInterval(timerInterval);
+                    return;
+                }
+
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                display.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+            tick();
+            timerInterval = setInterval(tick, 1000);
+        }
+
+        async function handleArrival(bookingId) {
+            const btn = document.getElementById('arrivedBtn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+            const result = await MS.markArrived(bookingId);
+            if (result) {
+                await renderActiveBooking();
+                await renderHistory();
+            } else {
+                alert('Check-in window has passed or is not yet open.');
+                if (btn) { btn.disabled = false; btn.textContent = "I've Arrived"; }
+            }
+        }
+
+        // ---- Booking History ----
+        async function renderHistory() {
+            const area = document.getElementById('bookingHistoryArea');
+            const bookings = await MS.getBookings();
+            const now = Date.now();
+
+            if (!bookings.length) {
+                area.innerHTML = `<div class="empty-history">No past bookings yet. <a href="contact.html" style="color:var(--gold);">Make your first reservation →</a></div>`;
+                return;
+            }
+
+            let html = '<div class="booking-history-list">';
+            bookings.forEach(bk => {
+                let statusClass, statusText;
+                if (now < bk.sessionStart) {
+                    statusClass = 'upcoming'; statusText = 'Upcoming';
+                } else if (now < bk.sessionEnd) {
+                    statusClass = 'active'; statusText = 'Active';
+                } else if (bk.arrived) {
+                    statusClass = 'arrived'; statusText = 'Visited';
+                } else {
+                    statusClass = 'past'; statusText = 'Past';
+                }
+
+                const typeClass = now < bk.sessionStart ? 'upcoming' : (now < bk.sessionEnd ? 'active-bk' : 'past');
+
+                let actionHTML = '';
+                // Since this runs synchronously in a loop but canReview is async, let's precompute or check it.
+                // Or simplified: check if strictly arrived but not reviewed based on `bk` struct.
+                if (bk.arrived && !bk.reviewed) {
+                    actionHTML = `<button class="btn-review-open" onclick="openReviewModal('${bk.id}')">Leave a Review &#9733;</button>`;
+                } else if (bk.reviewed) {
+                    actionHTML = `<span style="font-size:12px; color:var(--gold);">✓ Reviewed</span>`;
+                }
+
+                html += `
+          <div class="bh-card ${typeClass}">
+            <div class="bh-main">
+              <h4>${bk.date} &nbsp;·&nbsp; ${bk.time}</h4>
+              <div class="bh-meta">
+                <span>🍽 Table ${bk.tableNums.join(', ')}</span>
+                <span>📍 ${bk.zone}</span>
+                <span>👥 ${bk.guests} guest${bk.guests != 1 ? 's' : ''}</span>
+                ${bk.specialReq ? `<span>📝 ${bk.specialReq}</span>` : ''}
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <span class="bh-status ${statusClass}">${statusText}</span>
+              ${actionHTML}
+            </div>
+          </div>`;
+            });
+
+            html += '</div>';
+            area.innerHTML = html;
+        }
+
+        // ---- Review Modal ----
+        function openReviewModal(bookingId) {
+            reviewingBookingId = bookingId;
+            document.getElementById('reviewFormSection').style.display = 'block';
+            document.getElementById('reviewSuccess').style.display = 'none';
+            document.querySelectorAll('#starRating input').forEach(r => r.checked = false);
+            document.getElementById('reviewComment').value = '';
+            document.getElementById('reviewModal').classList.add('active');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('active');
+            reviewingBookingId = null;
+            renderHistory(); // Can be async but fine to not await here
+        }
+
+        async function submitReview() {
+            const ratingEl = document.querySelector('#starRating input:checked');
+            const comment = document.getElementById('reviewComment').value.trim();
+            if (!ratingEl) { alert('Please select a star rating.'); return; }
+            if (!comment) { alert('Please write a short comment.'); return; }
+
+            const saved = await MS.saveReview(reviewingBookingId, parseInt(ratingEl.value), comment);
+            if (saved) {
+                document.getElementById('reviewFormSection').style.display = 'none';
+                document.getElementById('reviewSuccess').style.display = 'block';
+                await renderHistory();
+            } else {
+                alert('Unable to submit review. Please make sure you checked in before the grace period ended.');
+            }
+        }
+
+        // ---- Run ----
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

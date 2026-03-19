@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Reserve a Table at Malabar Spice - Interactive table selection and time slot booking for Kerala's finest dining experience.">
+  <title>Reserve | Malabar Spice</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reservation.css">
+  <link rel="stylesheet" href="css/account.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+      </svg>
+      82 - 455 7990
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="account.html" class="nav-account-link" id="navAcctLink">My Account</a></li>
+      <li><a href="contact.html" class="btn btn-reserve active">Reserve</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep">&#8250;</span>
+      <span>Reserve</span>
+    </div>
+    <h1>Reserve a Table</h1>
+    <div
+      style="margin:14px auto 0; display:flex; align-items:center; justify-content:center; gap:12px; max-width:300px;">
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+      <span style="color:var(--gold); font-size:18px;">&#10070;</span>
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+    </div>
+    <p style="margin-top:18px;">Select your preferred time slot and table — we will take care of the rest.</p>
+  </section>
+
+  <!-- RESERVATION SYSTEM -->
+  <!-- LOGIN GATE -->
+  <div id="loginGate" style="display:none;">
+    <div style="background:var(--cream); padding:40px;">
+      <div class="login-gate">
+        <div class="gate-icon">🔒</div>
+        <h3>Login Required</h3>
+        <p>Please sign in or create an account with your phone number to make a reservation. This lets you track your
+          booking and leave a review after your visit.</p>
+        <a href="account.html" class="btn btn-primary" style="font-size:13px;">Sign In / Create Account &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESERVATION SYSTEM -->
+  <section class="reservation-section">
+
+    <!-- STEP 1: Date & Time -->
+    <div class="res-step" id="step1">
+      <div class="step-header">
+        <div class="step-badge">01</div>
+        <div>
+          <h2>Choose Date &amp; Time Slot</h2>
+          <p>Each reservation holds your table for 2 hours.</p>
+        </div>
+      </div>
+      <div class="datetime-row">
+        <div class="dt-group">
+          <label for="resDate">&#128197; Reservation Date</label>
+          <input type="date" id="resDate" onchange="onDateChange()">
+        </div>
+        <div class="dt-group">
+          <label>&#128336; Time Slot</label>
+          <div class="timeslot-grid" id="timeslotGrid">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Table Floor Plan -->
+    <div class="res-step" id="step2">
+      <div class="step-header">
+        <div class="step-badge">02</div>
+        <div>
+          <h2>Select Your Table(s)</h2>
+          <p>Click one or more available tables. Click again to deselect.</p>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="floor-legend">
+        <span class="legend-dot available"></span>Available
+        <span class="legend-dot reserved"></span>Reserved
+        <span class="legend-dot soon"></span>Reserved Soon
+        <span class="legend-dot selected"></span>Your Selection
+      </div>
+
+      <!-- Floor Plan -->
+      <div class="floor-wrapper">
+        <!-- Zone Labels -->
+        <div class="zone-label zone-window">🪟 Window</div>
+        <div class="zone-label zone-indoor">🏠 Indoor</div>
+        <div class="zone-label zone-outdoor">🌿 Outdoor / Garden</div>
+
+        <div class="floor-plan" id="floorPlan">
+          <!-- Tables rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Selected Table Info -->
+      <div class="table-info-bar" id="tableInfoBar" style="display:none;">
+        <div class="tib-item">
+          <span class="tib-label">Table</span>
+          <span class="tib-value" id="tibNum">—</span>
+        </div>
+        <div class="tib-divider"></div>
+        <div class="tib-item">
+          <span class="tib-label">Seats</span>
+          <span class="tib-value" id="tibSeats">—</span>
+        </div>
+        <div class="tib-divider"></div>
+        <div class="tib-item">
+          <span class="tib-label">Zone</span>
+          <span class="tib-value" id="tibZone">—</span>
+        </div>
+        <div class="tib-divider"></div>
+        <div class="tib-item">
+          <span class="tib-label">Status</span>
+          <span class="tib-value tib-status" id="tibStatus">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Booking Form -->
+    <div class="res-step" id="step3">
+      <div class="step-header">
+        <div class="step-badge">03</div>
+        <div>
+          <h2>Complete Your Reservation</h2>
+          <p>Fill in your details to confirm the booking.</p>
+        </div>
+      </div>
+
+      <form id="reserveForm" onsubmit="handleReservation(event)" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" placeholder="Arjun" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" placeholder="Menon" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+91 98XXX XXXXX" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email (Optional)</label>
+            <input type="email" id="email" placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="guests">Number of Guests</label>
+            <select id="guests" required>
+              <option value="">Select guests</option>
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="5">5 Guests</option>
+              <option value="6">6 Guests</option>
+              <option value="7-10">7 – 10 Guests</option>
+              <option value="10+">10+ Guests (Private Event)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="specialReq">Special Requests</label>
+            <input type="text" id="specialReq" placeholder="Dietary needs, occasion…">
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="booking-summary" id="bookingSummary">
+          <h4>Booking Summary</h4>
+          <div class="summary-grid">
+            <span>Date</span><strong id="sumDate">—</strong>
+            <span>Time Slot</span><strong id="sumTime">—</strong>
+            <span>Table</span><strong id="sumTable">—</strong>
+            <span>Zone</span><strong id="sumZone">—</strong>
+          </div>
+          <p class="grace-note">⏱ A 15-minute grace period applies. Unreserved tables will be made available again after
+            this window.</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary res-submit-btn" id="submitBtn">
+          <span>Confirm Reservation</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </form>
+
+      <!-- Success Message -->
+      <div id="formSuccess" class="success-card" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h3>Reservation Confirmed!</h3>
+        <p id="successMsg"></p>
+        <div class="success-timer" id="successTimer"></div>
+        <!-- Arrived button for post-booking check-in -->
+        <div id="arrivedWrap" style="display:none; margin-top:16px;">
+          <button id="postBookingArrived" class="btn-arrived" onclick="handlePostBookingArrival()">&#9679; I've
+            Arrived</button>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">Tap this button when you arrive at the
+            restaurant (within the 15-min grace window).</p>
+        </div>
+
+        <button class="btn btn-outline" onclick="resetReservation()" style="margin-top:20px; color:#fff;">Make Another
+          Reservation</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CONTACT INFO -->
+  <section class="contact-strip">
+    <div class="cs-item">
+      <div class="cs-icon">📍</div>
+      <div>
+        <h4>Address</h4>
+        <p>42, M.G. Road, Near Kovalam Beach<br>Thiruvananthapuram, Kerala – 695001</p>
+      </div>
+    </div>
+    <div class="cs-item">
+      <div class="cs-icon">📞</div>
+      <div>
+        <h4>Phone</h4>
+        <p>+91 82 – 455 7990<br>+91 83 – 455 5500</p>
+      </div>
+    </div>
+    <div class="cs-item">
+      <div class="cs-icon">✉</div>
+      <div>
+        <h4>Email</h4>
+        <p>reservations@malabarspice.in</p>
+      </div>
+    </div>
+    <div class="cs-item">
+      <div class="cs-icon">🕐</div>
+      <div>
+        <h4>Hours</h4>
+        <p>Mon – Sun &nbsp;|&nbsp; 11:00 AM – 10:30 PM</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&#169; 2026 <span>Malabar Spice</span>. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <p>&#9990; 83 – 455 5500 &nbsp;|&nbsp; 11:00 AM – 10:30 PM</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/reservation.js"></script>
+  <script>
+    // ---- Login gate + nav dot ----
+    (function () {
+      var dot = document.getElementById('navAcctLink');
+      if (typeof MS !== 'undefined') {
+        if (MS.isLoggedIn()) {
+          document.getElementById('loginGate').style.display = 'none';
+          if (dot) dot.innerHTML = '<span class="nav-account-dot"></span>My Account';
+        } else {
+          document.getElementById('loginGate').style.display = 'block';
+          document.getElementById('step1').style.display = 'none';
+          document.getElementById('step2').style.display = 'none';
+          document.getElementById('step3').style.display = 'none';
+          var mc = document.querySelector('.menu-controls');
+          if (mc) mc.style.display = 'none';
+        }
+      }
+    })();
+
+    // Latest booking for post-booking arrival check-in
+    var _latestBookingId = null;
+    async function handlePostBookingArrival() {
+      if (!_latestBookingId) return;
+      var result = await MS.markArrived(_latestBookingId);
+      var btn = document.getElementById('postBookingArrived');
+      if (result) {
+        if (btn) { btn.disabled = true; btn.innerHTML = '&#10003; Checked In!'; }
+      } else {
+        alert('Check-in window not yet open or has passed. You can also check in from your account page.');
+      }
+    }
+
+    // Capture booking ID after save (monkey-patch MS.saveBooking)
+    if (typeof MS !== 'undefined') {
+      var _origSave = MS.saveBooking.bind(MS);
+      MS.saveBooking = async function (data) {
+        var bk = await _origSave(data);
+        if (bk) _latestBookingId = bk.id;
+        return bk;
+      };
+    }
+  </script>
+</body>
+
+</html>

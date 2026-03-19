@@ -1,0 +1,423 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Malabar Spice Gallery - Photos of our dishes, ambiance and Kerala heritage.">
+  <title>Gallery | Malabar Spice</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---- Gallery Filter Tabs ---- */
+    .gallery-filters {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 36px 40px 8px;
+      background: var(--cream);
+    }
+
+    .filter-btn {
+      padding: 8px 24px;
+      font-family: 'Lato', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1.5px solid #ccc3b5;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.28s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--gold);
+      color: var(--dark-green);
+      border-color: var(--gold);
+    }
+
+    /* ---- Gallery Grid ---- */
+    .gallery-section {
+      background: var(--cream);
+      padding: 32px 60px 72px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12);
+      aspect-ratio: 4/3;
+      background: #1a2e22;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s ease, filter 0.55s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+      filter: brightness(0.72);
+    }
+
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 24px 20px 20px;
+      background: linear-gradient(to top, rgba(10, 22, 14, 0.78) 0%, rgba(10, 22, 14, 0) 55%);
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item-overlay span {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--white);
+      letter-spacing: 0.4px;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .gallery-item-overlay .tag {
+      font-family: 'Lato', sans-serif;
+      font-size: 10px;
+      font-style: normal;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+
+    .gallery-zoom-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(184, 146, 42, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .gallery-zoom-icon svg {
+      color: var(--dark-green);
+    }
+
+    .gallery-item:hover .gallery-zoom-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ---- Hidden items (filtered out) ---- */
+    .gallery-item.hidden {
+      display: none;
+    }
+
+    /* ---- Lightbox ---- */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(5, 14, 9, 0.94);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      animation: lbFadeIn 0.25s ease;
+    }
+
+    @keyframes lbFadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 860px;
+      width: 100%;
+      animation: lbScaleIn 0.28s ease;
+    }
+
+    @keyframes lbScaleIn {
+      from {
+        transform: scale(0.93);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .lightbox-inner img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-caption {
+      text-align: center;
+      margin-top: 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--dark-green);
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover {
+      background: var(--gold-light);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(184, 146, 42, 0.85);
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark-green);
+      font-size: 18px;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+
+    .lightbox-nav:hover {
+      background: var(--gold-light);
+    }
+
+    .lightbox-nav.prev {
+      left: -56px;
+    }
+
+    .lightbox-nav.next {
+      right: -56px;
+    }
+
+    /* ---- Fade-up animation ---- */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gallery-section {
+        padding: 28px 24px 56px;
+      }
+
+      .lightbox-nav.prev {
+        left: 0;
+      }
+
+      .lightbox-nav.next {
+        right: 0;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+      </svg>
+      82 - 455 7990
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="account.html" class="nav-account-link" id="navAcctLink">My Account</a></li>
+      <li><a href="contact.html" class="btn btn-reserve">Reserve</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep">&#8250;</span>
+      <span>Gallery</span>
+    </div>
+    <h1>Our Gallery</h1>
+    <div
+      style="margin:14px auto 0; display:flex; align-items:center; justify-content:center; gap:12px; max-width:300px;">
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+      <span style="color:var(--gold); font-size:18px;">&#10070;</span>
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+    </div>
+    <p style="margin-top:18px;">A visual journey through Kerala's finest flavors and ambiance.</p>
+  </section>
+
+  <!-- FILTER TABS -->
+  <div class="gallery-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="food">Food</button>
+    <button class="filter-btn" data-filter="ambiance">Ambiance</button>
+    <button class="filter-btn" data-filter="heritage">Heritage</button>
+    <button class="filter-btn" data-filter="desserts">Desserts</button>
+  </div>
+
+  <!-- GALLERY GRID -->
+  <section class="gallery-section">
+    <div class="gallery-grid" id="galleryGrid">
+      <p style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">Loading gallery...</p>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightboxOnBackdrop(event)">
+    <div class="lightbox-inner" id="lightboxInner">
+      <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
+      <button class="lightbox-nav prev" onclick="changeLightbox(-1)">&#8592;</button>
+      <button class="lightbox-nav next" onclick="changeLightbox(1)">&#8594;</button>
+      <img id="lightboxImg" src="" alt="">
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+  </div>
+
+  <!-- RESERVE CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Reserve Your Table Today</h2>
+      <a href="contact.html" class="btn btn-primary">Book Now</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&#169; 2026 <span>Malabar Spice</span>. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <p>&#9990; 83 - 455 5500 | 1:00 AM - 10:30 PM</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/gallery-loader.js"></script>
+  <script>
+    // Lightbox helpers
+    function openLightbox(index) {
+      GALLERY_LOADER.openLightbox(index);
+    }
+    function closeLightbox() {
+      GALLERY_LOADER.closeLightbox();
+    }
+    function closeLightboxOnBackdrop(e) {
+      if (e.target === document.getElementById('lightbox')) GALLERY_LOADER.closeLightbox();
+    }
+    function changeLightbox(dir) {
+      GALLERY_LOADER.changeLightbox(dir);
+    }
+    
+    // Nav dot for logged-in state
+    (function () {
+      if (typeof MS !== 'undefined' && MS.isLoggedIn()) {
+        var link = document.getElementById('navAcctLink');
+        if (link) link.innerHTML = '<span class="nav-account-dot"></span>My Account';
+      }
+    })();
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('active')) return;
+      if (e.key === 'ArrowRight') changeLightbox(1);
+      if (e.key === 'ArrowLeft') changeLightbox(-1);
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+
+</html>

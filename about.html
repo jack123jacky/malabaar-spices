@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Malabar Spice - 25 years of authentic Kerala culinary heritage.">
+  <title>About | Malabar Spice</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+      </svg>
+      82 - 455 7990
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="account.html" class="nav-account-link" id="navAcctLink">My Account</a></li>
+      <li><a href="contact.html" class="btn btn-reserve">Reserve</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep">&#8250;</span>
+      <span>About</span>
+    </div>
+    <h1>Our Story</h1>
+    <div
+      style="margin:14px auto 0; display:flex; align-items:center; justify-content:center; gap:12px; max-width:300px;">
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+      <span style="color:var(--gold); font-size:18px;">&#10070;</span>
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+    </div>
+  </section>
+
+  <!-- STORY SECTION (hero img + text) -->
+  <section class="about-story">
+    <div class="about-story-img">
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80"
+        alt="Kerala backwaters houseboat at sunset"
+        onerror="this.src='https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80'">
+      <div class="about-story-img-overlay"></div>
+      <div style="position:absolute; bottom:40px; left:40px; z-index:2; max-width:320px;">
+        <h2 style="font-family:'Playfair Display',serif; color:#fff; font-size:1.9rem; line-height:1.2;">Experience the
+          Soul of Kerala on Every Plate</h2>
+        <p style="color:rgba(255,255,255,0.75); font-size:13.5px; margin-top:10px;">Authentic flavors crafted with
+          tradition</p>
+      </div>
+    </div>
+    <div class="about-story-text">
+      <div class="label">Our Heritage</div>
+      <h2>A Culinary Legacy Since 1998</h2>
+      <p>For over 25 years, Malabar Spice has been dedicated to preserving the rich culinary heritage of Kerala. Our
+        journey began with a simple passion: to share the authentic flavors and traditions passed down through
+        generations.</p>
+      <p>From the vibrant spice markets to the tranquil backwaters, every element of Kerala's culture is infused into
+        our dishes. Our founder, a master of traditional Malabar cuisine, curated our menu with a commitment to quality
+        and authenticity.</p>
+      <p>Since 1998, we have been a cornerstone of Thiruvananthapuram's dining scene, celebrating the region's unique
+        culinary soul.</p>
+    </div>
+  </section>
+
+  <!-- EXCELLENCE SECTION -->
+  <section class="about-excellence">
+    <div class="about-excellence-images">
+      <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=700&q=80" alt="Fresh Kerala spices"
+        onerror="this.src='https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=700&q=80'">
+      <img src="https://images.unsplash.com/photo-1585252369926-e5d4bdec4b24?w=400&q=80" alt="Kerala sadya preparation"
+        onerror="this.src='https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&q=80'">
+      <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80"
+        alt="Karimeen pollichathu Kerala fish"
+        onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80'">
+    </div>
+    <div class="about-excellence-text">
+      <div class="label">Our Promise</div>
+      <h2>Culinary Excellence &amp; Sourcing</h2>
+      <h4>Only the Finest Ingredients</h4>
+      <p>We believe that true flavor begins with the freshest, most ethical sourcing. We partner with local spice
+        farmers and backwater fishermen to ensure that every ingredient, from the peppercorns to the seafood, is of the
+        highest quality.</p>
+      <p>Our kitchen follows traditional methods - slow cooking, stone grinding, and hand-picking produce - preserving
+        the integrity of each dish as it was meant to be tasted.</p>
+      <a href="menu.html" class="btn btn-primary" style="width:fit-content;">Explore Menu</a>
+    </div>
+  </section>
+
+  <!-- MEMORIES SECTION -->
+  <section class="about-memories">
+    <div class="about-memories-text">
+      <div class="label">Our Space</div>
+      <h2>Creating Memories, One Table at a Time</h2>
+      <p>Beyond our menu, Malabar Spice is a sanctuary for communal dining and celebration. Our space is designed to
+        transport you, blending traditional architectural elements with modern comfort.</p>
+      <p>From the intimate lighting to the intricate wood carvings, every detail tells a story. Whether you are
+        celebrating a special occasion, hosting a corporate event, or enjoying a casual dinner, we invite you to
+        experience the authentic warmth and hospitality of Kerala.</p>
+      <a href="contact.html" class="btn btn-primary" style="width:fit-content; margin-top:8px;">Reserve a Table</a>
+    </div>
+    <div class="about-memories-images">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" alt="Restaurant ambiance"
+        onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80'">
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80" alt="Kerala restaurant interior"
+        onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80'">
+    </div>
+  </section>
+
+  <!-- RESERVE CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Reserve Your Table Today</h2>
+      <a href="contact.html" class="btn btn-primary">Book Now</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&#169; 2026 <span>Malabar Spice</span>. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <p>&#9990; 83 - 455 5500 | 1:00 AM - 10:30 PM</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    (function () {
+      if (typeof MS !== 'undefined' && MS.isLoggedIn()) {
+        var link = document.getElementById('navAcctLink');
+        if (link) link.innerHTML = '<span class="nav-account-dot"></span>My Account';
+      }
+    })();
+  </script>
+</body>
+
+</html>

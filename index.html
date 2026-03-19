@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Malabar Spice - Authentic Kerala cuisine crafted with tradition and coastal elegance.">
+  <title>Malabar Spice | Authentic Kerala Cuisine</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/account.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+      </svg>
+      82 - 455 7990
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="account.html" class="nav-account-link" id="navAcctLink">My Account</a></li>
+      <li><a href="contact.html" class="btn btn-reserve">Reserve</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Experience the<br><span>Soul of Kerala</span><br>on Every Plate</h1>
+      <p class="hero-subtitle">Authentic flavors crafted with tradition and coastal elegance.</p>
+      <div class="hero-buttons">
+        <a href="menu.html" class="btn btn-primary">View Menu</a>
+        <a href="contact.html" class="btn btn-outline">Reserve a Table</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORNAMENT -->
+  <div style="background:var(--cream); text-align:center; padding:18px 0; border-top:1px solid rgba(184,146,42,0.2);">
+    <span style="color:var(--gold); font-size:20px; letter-spacing:8px;">&#10022; &#10022; &#10022;</span>
+  </div>
+
+  <!-- SIGNATURE DISHES -->
+  <section class="signature-section">
+    <div class="section-header">
+      <div class="section-divider">
+        <div class="line"></div>
+        <div class="ornament-icon">&#10070;</div>
+        <div class="line right"></div>
+      </div>
+      <h2>Signature Dishes</h2>
+    </div>
+
+    <div class="dishes-grid">
+      <div class="dish-card fade-up">
+        <div class="dish-card-img-wrap">
+          <img class="dish-card-img" src="assets/images/sadya.jpg"
+            alt="Kerala Sadya served on banana leaf">
+        </div>
+        <div class="dish-card-body">
+          <h3>Kerala Sadya</h3>
+          <p>Traditional festive feast served on banana leaf.</p>
+        </div>
+      </div>
+
+      <div class="dish-card fade-up">
+        <div class="dish-card-img-wrap">
+          <img class="dish-card-img" src="assets/images/biriyani.jpg"
+            alt="Malabar Biriyani">
+        </div>
+        <div class="dish-card-body">
+          <h3>Malabar Biriyani</h3>
+          <p>Fragrant rice layered with coastal spices.</p>
+        </div>
+      </div>
+
+      <div class="dish-card fade-up">
+        <div class="dish-card-img-wrap">
+          <img class="dish-card-img" src="assets/images/karimeen.jpg"
+            alt="Karimeen Pollichathu Kerala fish">
+        </div>
+        <div class="dish-card-body">
+          <h3>Karimeen Pollichathu</h3>
+          <p>Banana leaf wrapped pearl spot fish.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER REVIEWS -->
+  <section class="reviews-section">
+    <div class="section-header">
+      <div class="section-divider">
+        <div class="line"></div>
+        <div class="ornament-icon">&#10070;</div>
+        <div class="line right"></div>
+      </div>
+      <h2>What Our Guests Say</h2>
+      <p>Honest reviews from verified diners at Malabar Spice.</p>
+    </div>
+    <div class="reviews-grid" id="homeReviews">
+      <p class="no-reviews">Be the first to share your experience! Book a table, dine with us, and leave a review from
+        your account.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features-section" style="background: var(--cream); padding: 60px 40px;">
+    <div class="section-header">
+      <div class="section-divider">
+        <div class="line"></div>
+        <div class="ornament-icon">&#10070;</div>
+        <div class="line right"></div>
+      </div>
+      <h2>Why Choose Malabar Spice</h2>
+      <p>Experience authentic Kerala cuisine with premium ingredients and expert craftsmanship.</p>
+    </div>
+    <div class="features-grid" id="featuresContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; max-width: 1100px; margin: 0 auto;">
+      <p style="grid-column: 1 / -1; text-align: center; color: #999;">Loading features...</p>
+    </div>
+  </section>
+
+  <!-- RESERVE CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Reserve Your Table Today</h2>
+      <a href="contact.html" class="btn btn-primary">Book Now</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&#169; 2026 <span>Malabar Spice</span>. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <p>&#9990; 83 - 455 5500 | 1:00 AM - 10:30 PM</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/features-loader.js"></script>
+  <script>
+    // ---- Customer Reviews Section ----
+    async function renderHomeReviews() {
+      var container = document.getElementById('homeReviews');
+      if (!container || typeof MS === 'undefined') return;
+      var reviews = await MS.getAllReviews();
+      if (!reviews.length) {
+        container.innerHTML = '<p class="no-reviews">Be the first to share your experience! Book a table, visit us, and leave a review from your account.</p>';
+        return;
+      }
+      var html = '';
+      reviews.slice(0, 6).forEach(function (r) {
+        var stars = '';
+        for (var i = 0; i < r.rating; i++) stars += '&#9733;';
+        for (var j = r.rating; j < 5; j++) stars += '<span style="color:#d5ccc0;">&#9733;</span>';
+        var initial = (r.name || 'G')[0].toUpperCase();
+        html += '<div class="review-card">' +
+          '<div class="review-stars">' + stars + '</div>' +
+          '<p class="review-comment">' + r.comment + '</p>' +
+          '<div class="review-author">' +
+          '<div class="review-avatar">' + initial + '</div>' +
+          '<div><div class="review-name">' + r.name + '</div>' +
+          '<div class="review-date">' + r.date + '</div></div>' +
+          '</div></div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // Nav dot for logged-in state
+    (function () {
+      if (typeof MS !== 'undefined' && MS.isLoggedIn()) {
+        var link = document.getElementById('navAcctLink');
+        if (link) link.innerHTML = '<span class="nav-account-dot"></span>My Account';
+      }
+    })();
+
+    document.addEventListener('DOMContentLoaded', renderHomeReviews);
+  </script>
+</body>
+
+</html>

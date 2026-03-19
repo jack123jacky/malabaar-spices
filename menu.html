@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Malabar Spice Menu - Authentic Kerala dishes crafted with tradition and coastal elegance.">
+  <title>Menu | Malabar Spice</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+      </svg>
+      82 - 455 7990
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html" class="active">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="account.html" class="nav-account-link" id="navAcctLink">My Account</a></li>
+      <li><a href="contact.html" class="btn btn-reserve">Reserve</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep">&#8250;</span>
+      <span>Menu</span>
+      <span style="flex:1; max-width:60px; height:1px; background:rgba(255,255,255,0.2); margin:0 8px;"></span>
+    </div>
+    <h1>Our Menu</h1>
+    <div
+      style="margin:14px auto 0; display:flex; align-items:center; justify-content:center; gap:12px; max-width:300px;">
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+      <span style="color:var(--gold); font-size:18px;">&#10070;</span>
+      <div style="flex:1; height:1px; background:rgba(184,146,42,0.5);"></div>
+    </div>
+    <p style="margin-top:18px;">Authentic flavors crafted with tradition and coastal elegance.</p>
+  </section>
+
+  <!-- MENU CONTROLS -->
+  <div class="menu-controls">
+    <select id="categoryFilter" onchange="filterMenu()">
+      <option value="all">Filter by Category</option>
+      <option value="appetizer">Appetizers</option>
+      <option value="main">Main Course</option>
+      <option value="dessert">Desserts</option>
+    </select>
+    <input type="search" id="menuSearch" placeholder="Search..." oninput="filterMenu()">
+  </div>
+
+  <!-- MENU GRID -->
+  <section class="menu-section">
+    <div class="menu-grid" id="menuGrid">
+      <p style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">Loading menu items...</p>
+    </div>
+  </section>
+
+  <!-- RESERVE CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Reserve Your Table Today</h2>
+      <a href="contact.html" class="btn btn-primary">Book Now</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&#169; 2026 <span>Malabar Spice</span>. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <p>&#9990; 83 - 455 5500 | 1:00 AM - 10:30 PM</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/menu-loader.js"></script>
+  <script>
+    (function () {
+      if (typeof MS !== 'undefined' && MS.isLoggedIn()) {
+        var link = document.getElementById('navAcctLink');
+        if (link) link.innerHTML = '<span class="nav-account-dot"></span>My Account';
+      }
+    })();
+  </script>
+</body>
+
+</html>

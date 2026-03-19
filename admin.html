@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malabar Spice - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-container">
+        <div class="login-box">
+            <h1>Admin Login</h1>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" id="adminUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p id="loginError" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (Hidden until login) -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1>Malabar Spice - Admin Dashboard</h1>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <div class="admin-container">
+            <aside class="admin-sidebar">
+                <nav class="admin-nav">
+                    <button class="nav-btn active" data-section="orders">
+                        <span>📋</span> Orders & Bookings
+                    </button>
+                    <button class="nav-btn" data-section="timeslots">
+                        <span>⏰</span> Time Slots
+                    </button>
+                    <button class="nav-btn" data-section="menu">
+                        <span>🍽️</span> Menu Management
+                    </button>
+                    <button class="nav-btn" data-section="gallery">
+                        <span>🖼️</span> Gallery
+                    </button>
+                    <button class="nav-btn" data-section="settings">
+                        <span>⚙️</span> Features & Settings
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <!-- Orders & Bookings Section -->
+                <section id="ordersSection" class="admin-section active">
+                    <h2>Orders & Bookings</h2>
+                    <div class="section-controls">
+                        <input type="text" id="bookingSearchPhone" placeholder="Search by phone number" class="search-box">
+                        <select id="bookingStatusFilter" class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="arrived">Arrived</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div id="bookingsList" class="bookings-list">
+                        <p class="loading">Loading bookings...</p>
+                    </div>
+                </section>
+
+                <!-- Time Slots Section -->
+                <section id="timeslotsSection" class="admin-section">
+                    <h2>Manage Time Slots</h2>
+                    <div class="section-controls">
+                        <form id="addTimeSlotForm" class="form-inline">
+                            <input type="time" id="slotStartTime" placeholder="Start Time" required>
+                            <input type="time" id="slotEndTime" placeholder="End Time" required>
+                            <input type="number" id="slotCapacity" placeholder="Capacity" min="1" required>
+                            <button type="submit" class="btn btn-primary">Add Time Slot</button>
+                        </form>
+                    </div>
+                    <div id="timeSlotsList" class="list-container">
+                        <p class="loading">Loading time slots...</p>
+                    </div>
+                </section>
+
+                <!-- Menu Management Section -->
+                <section id="menuSection" class="admin-section">
+                    <h2>Menu Management</h2>
+                    <div class="section-controls">
+                        <form id="addMenuItemForm" class="form-grid">
+                            <input type="text" id="menuItemName" placeholder="Item Name" required>
+                            <select id="menuItemCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Appetizers">Appetizers</option>
+                                <option value="Curries">Curries</option>
+                                <option value="Breads">Breads</option>
+                                <option value="Rice Dishes">Rice Dishes</option>
+                                <option value="Seafood">Seafood</option>
+                                <option value="Desserts">Desserts</option>
+                                <option value="Beverages">Beverages</option>
+                            </select>
+                            <input type="number" id="menuItemPrice" placeholder="Price" step="0.01" required>
+                            <textarea id="menuItemDescription" placeholder="Description" rows="2"></textarea>
+                            <input type="number" id="menuItemCalories" placeholder="Calories (optional)" step="1">
+                            <input type="file" id="menuItemImage" accept="image/*" placeholder="Upload Image">
+                            <input type="checkbox" id="menuItemVeg" class="checkbox"> <label for="menuItemVeg">Vegetarian</label>
+                            <button type="submit" class="btn btn-primary">Add Menu Item</button>
+                        </form>
+                    </div>
+                    <div id="menuList" class="menu-grid-admin">
+                        <p class="loading">Loading menu items...</p>
+                    </div>
+                </section>
+
+                <!-- Gallery Management Section -->
+                <section id="gallerySection" class="admin-section">
+                    <h2>Gallery Management</h2>
+                    <div class="section-controls">
+                        <form id="addGalleryForm" class="form-grid">
+                            <input type="text" id="galleryTitle" placeholder="Image Title" required>
+                            <textarea id="galleryCaption" placeholder="Image Caption (optional)" rows="2"></textarea>
+                            <input type="file" id="galleryImage" accept="image/*" placeholder="Upload Image" required>
+                            <button type="submit" class="btn btn-primary">Add to Gallery</button>
+                        </form>
+                    </div>
+                    <div id="galleryList" class="menu-grid-admin">
+                        <p class="loading">Loading gallery images...</p>
+                    </div>
+                </section>
+
+                <!-- Features & Settings Section -->
+                <section id="settingsSection" class="admin-section">
+                    <h2>Features & Settings</h2>
+                    <div class="section-controls">
+                        <form id="addFeatureForm" class="form-grid">
+                            <input type="text" id="featureTitle" placeholder="Feature Title" required>
+                            <textarea id="featureDescription" placeholder="Feature Description" rows="2" required></textarea>
+                            <input type="file" id="featureIcon" accept="image/*" placeholder="Upload Icon (optional)">
+                            <button type="submit" class="btn btn-primary">Add Feature</button>
+                        </form>
+                    </div>
+                    <div id="featuresList" class="list-container">
+                        <p class="loading">Loading features...</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Booking Modal -->
+    <div id="editBookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Booking Details</h2>
+            <div id="bookingDetails" class="booking-details">
+                <!-- Details will be populated here -->
+            </div>
+            <div class="modal-actions">
+                <button id="cancelBookingBtn" class="btn btn-danger">Cancel Booking</button>
+                <button id="markArrivedBtn" class="btn btn-success">Mark as Arrived</button>
+                <button id="closeModalBtn" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Menu Modal -->
+    <div id="editMenuModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Edit Menu Item</h2>
+            <form id="editMenuItemForm" class="form-grid">
+                <input type="hidden" id="editMenuItemId">
+                <input type="text" id="editMenuItemName" placeholder="Item Name" required>
+                <select id="editMenuItemCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="Appetizers">Appetizers</option>
+                    <option value="Curries">Curries</option>
+                    <option value="Breads">Breads</option>
+                    <option value="Rice Dishes">Rice Dishes</option>
+                    <option value="Seafood">Seafood</option>
+                    <option value="Desserts">Desserts</option>
+                    <option value="Beverages">Beverages</option>
+                </select>
+                <input type="number" id="editMenuItemPrice" placeholder="Price" step="0.01" required>
+                <textarea id="editMenuItemDescription" placeholder="Description" rows="2"></textarea>
+                <input type="number" id="editMenuItemCalories" placeholder="Calories (optional)" step="1">
+                <input type="file" id="editMenuItemImage" accept="image/*" placeholder="Upload New Image (optional)">
+                <input type="checkbox" id="editMenuItemVeg" class="checkbox">
+                <label for="editMenuItemVeg">Vegetarian</label>
+                <button type="submit" class="btn btn-primary">Update Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Gallery Modal -->
+    <div id="editGalleryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Edit Gallery Image</h2>
+            <form id="editGalleryForm" class="form-grid">
+                <input type="hidden" id="editGalleryId">
+                <input type="text" id="editGalleryTitle" placeholder="Image Title" required>
+                <textarea id="editGalleryCaption" placeholder="Image Caption (optional)" rows="2"></textarea>
+                <input type="file" id="editGalleryImage" accept="image/*" placeholder="Upload New Image (optional)">
+                <button type="submit" class="btn btn-primary">Update Image</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Feature Modal -->
+    <div id="editFeatureModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Edit Feature</h2>
+            <form id="editFeatureForm" class="form-grid">
+                <input type="hidden" id="editFeatureId">
+                <input type="text" id="editFeatureTitle" placeholder="Feature Title" required>
+                <textarea id="editFeatureDescription" placeholder="Feature Description" rows="2" required></textarea>
+                <input type="file" id="editFeatureIcon" accept="image/*" placeholder="Upload Icon (optional)">
+                <button type="submit" class="btn btn-primary">Update Feature</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Time Slot Modal -->
+    <div id="editTimeSlotModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Edit Time Slot</h2>
+            <form id="editTimeSlotForm" class="form-grid">
+                <input type="hidden" id="editSlotId">
+                <input type="time" id="editSlotStartTime" placeholder="Start Time" required>
+                <input type="time" id="editSlotEndTime" placeholder="End Time" required>
+                <input type="number" id="editSlotCapacity" placeholder="Capacity" min="1" required>
+                <button type="submit" class="btn btn-primary">Update Time Slot</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>
