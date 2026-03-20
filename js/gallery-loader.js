@@ -4,7 +4,7 @@
 // ============================================
 
 const GALLERY_LOADER = {
-    API_URL: 'http://localhost:5000/api',
+    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
     allGalleryImages: [],
     currentLightboxIndex: 0,
 

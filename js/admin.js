@@ -3,7 +3,7 @@
 // ============================================
 
 const ADMIN = {
-    API_URL: 'http://localhost:5000/api',
+    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
     ADMIN_CREDENTIALS: {
         username: 'admin1234',
         password: 'kuzhikandathil@123'

@@ -4,7 +4,7 @@
 // ============================================
 
 const MENU_LOADER = {
-    API_URL: 'http://localhost:5000/api',
+    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
     allMenuItems: [],
 
     // Category mapping for filters
