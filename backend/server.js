@@ -96,7 +96,13 @@ const featureSchema = new mongoose.Schema({
 });
 const Feature = mongoose.model('Feature', featureSchema);
 
+// --- Health Check ---
+app.get('/', (req, res) => {
+    res.json({ status: 'Malabar Spice API is running ✅' });
+});
+
 // --- API Routes ---
+
 
 // Admin Login
 app.post('/api/admin/login', async (req, res) => {
