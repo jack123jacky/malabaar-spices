@@ -7,7 +7,7 @@ const MS = {
     KEYS: {
         USER_PHONE: 'ms_user_phone'
     },
-    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
+    API_URL: 'https://malabar-spice-backend.onrender.com/api',
 
     _uuid() {
         return 'bk_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);

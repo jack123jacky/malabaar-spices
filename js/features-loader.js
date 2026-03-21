@@ -4,7 +4,7 @@
 // ============================================
 
 const FEATURES_LOADER = {
-    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
+    API_URL: 'https://malabar-spice-backend.onrender.com/api',
     allFeatures: [],
 
     // Initialize and load features

@@ -3,7 +3,7 @@
 // ============================================
 
 const ADMIN = {
-    API_URL: 'https://malabaar-spices-wbql.vercel.app/api',
+    API_URL: 'https://malabar-spice-backend.onrender.com/api',
     ADMIN_CREDENTIALS: {
         username: 'admin1234',
         password: 'kuzhikandathil@123'
