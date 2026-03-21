@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment variables (NEVER commit passwords)
+.env
+backend/.env
+
+# Old/duplicate project folders inside this directory (nested git repos)
+malabaaar/
+malabaar-spices/
+rest-Malabar-/
+Restaurant_website/
+malabaaar-spices/
+
+# Logs
+*.log
+out.log
+
+# OS files
+.DS_Store
+Thumbs.db
