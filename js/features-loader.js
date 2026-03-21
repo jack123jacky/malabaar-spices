@@ -61,6 +61,17 @@ const FEATURES_LOADER = {
         ];
     },
 
+    // Sanitize icon — only allow short emoji/text (max 10 chars), not base64 or URLs
+    sanitizeIcon(icon) {
+        if (!icon) return '⭐';
+        const trimmed = icon.trim();
+        // If it looks like a base64 image, URL, or is too long, use default
+        if (trimmed.startsWith('data:') || trimmed.startsWith('http') || trimmed.length > 10) {
+            return '⭐';
+        }
+        return trimmed;
+    },
+
     // Render features
     renderFeatures() {
         const container = document.getElementById('featuresContainer');
@@ -73,7 +84,7 @@ const FEATURES_LOADER = {
 
         container.innerHTML = this.allFeatures.map(feature => `
             <div class="feature-card fade-up">
-                <div class="feature-icon">${feature.icon || '⭐'}</div>
+                <div class="feature-icon">${this.sanitizeIcon(feature.icon)}</div>
                 <h3>${feature.title}</h3>
                 <p>${feature.description}</p>
             </div>

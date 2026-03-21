@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    MALABAR SPICE â€” Style Sheet
    Kerala Fine Dining â€” Premium UI
    ============================================ */
@@ -1246,4 +1246,256 @@ footer .footer-links a:hover {
         flex-direction: column;
         text-align: center;
     }
+
+    /* About page */
+    .about-story-text {
+        padding: 40px 24px;
+    }
+
+    .about-story-img img {
+        min-height: 280px;
+    }
+
+    /* Features */
+    .features-section {
+        padding: 48px 24px !important;
+    }
+
+    /* Reviews */
+    .reviews-section {
+        padding: 48px 24px;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Hamburger animation */
+    .menu-toggle.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .menu-toggle.open span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
 }
+
+/* ============================================
+   SMALL MOBILE (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .nav-left {
+        font-size: 11px;
+    }
+
+    .hero-content {
+        padding: 0 16px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.7rem;
+        line-height: 1.25;
+    }
+
+    .hero-subtitle {
+        font-size: 13px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .signature-section,
+    .menu-section,
+    .gallery-section,
+    .cta-section,
+    .features-section {
+        padding: 36px 16px !important;
+    }
+
+    .section-header {
+        margin-bottom: 32px;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .dishes-grid,
+    .menu-grid,
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .dish-card-img,
+    .dish-card-img-wrap {
+        height: 180px;
+    }
+
+    .menu-card-img-wrap {
+        height: 180px;
+    }
+
+    .page-hero {
+        padding: 100px 16px 36px;
+    }
+
+    .page-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .menu-controls {
+        padding: 16px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .menu-controls select,
+    .menu-controls input[type="search"] {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .feature-card {
+        padding: 24px 20px;
+    }
+
+    .about-story {
+        grid-template-columns: 1fr;
+    }
+
+    .about-story-img img {
+        min-height: 220px;
+        max-height: 260px;
+    }
+
+    .about-story-text {
+        padding: 32px 16px;
+    }
+
+    .about-story-text h2 {
+        font-size: 1.5rem;
+    }
+
+    .contact-section {
+        grid-template-columns: 1fr;
+        padding: 32px 16px;
+        gap: 32px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-section {
+        padding: 60px 16px;
+    }
+
+    .cta-content h2 {
+        font-size: 1.6rem;
+    }
+
+    footer {
+        padding: 20px 16px;
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+    }
+
+    footer .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .review-card {
+        padding: 20px 16px;
+    }
+}
+
+/* ============================================
+   TABLET (769px - 1024px)
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        padding: 0 24px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    .hero-content {
+        padding: 0 40px;
+    }
+
+    .signature-section,
+    .menu-section,
+    .gallery-section {
+        padding: 60px 40px;
+    }
+
+    .dishes-grid,
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .menu-controls {
+        padding: 20px 40px;
+        flex-wrap: wrap;
+    }
+
+    .about-story {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .about-story-text {
+        padding: 48px 36px;
+    }
+
+    .features-section {
+        padding: 60px 40px !important;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .page-hero {
+        padding: 110px 40px 50px;
+    }
+
+    footer {
+        padding: 24px 32px;
+    }
+}
