@@ -488,9 +488,6 @@ function showSuccess(firstName, lastName, phone, guests) {
         Please arrive within 15 minutes of your slot start time.<br><br>
         ${loggedIn ? '✅ Booking saved to your account. <a href="account.html" style="color:var(--gold)">View in My Account →</a>' : ''}`;
 
-    // Show arrived button if login is active
-    const arrivedWrap = document.getElementById('arrivedWrap');
-    if (arrivedWrap) arrivedWrap.style.display = 'block';
 
     // Countdown: first count down to slot start, then count the 15-min grace period
     const timerEl = document.getElementById('successTimer');

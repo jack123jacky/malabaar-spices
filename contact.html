@@ -227,13 +227,6 @@
         <h3>Reservation Confirmed!</h3>
         <p id="successMsg"></p>
         <div class="success-timer" id="successTimer"></div>
-        <!-- Arrived button for post-booking check-in -->
-        <div id="arrivedWrap" style="display:none; margin-top:16px;">
-          <button id="postBookingArrived" class="btn-arrived" onclick="handlePostBookingArrival()">&#9679; I've
-            Arrived</button>
-          <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">Tap this button when you arrive at the
-            restaurant (within the 15-min grace window).</p>
-        </div>
 
         <button class="btn btn-outline" onclick="resetReservation()" style="margin-top:20px; color:#fff;">Make Another
           Reservation</button>
@@ -306,29 +299,6 @@
         }
       }
     })();
-
-    // Latest booking for post-booking arrival check-in
-    var _latestBookingId = null;
-    async function handlePostBookingArrival() {
-      if (!_latestBookingId) return;
-      var result = await MS.markArrived(_latestBookingId);
-      var btn = document.getElementById('postBookingArrived');
-      if (result) {
-        if (btn) { btn.disabled = true; btn.innerHTML = '&#10003; Checked In!'; }
-      } else {
-        alert('Check-in window not yet open or has passed. You can also check in from your account page.');
-      }
-    }
-
-    // Capture booking ID after save (monkey-patch MS.saveBooking)
-    if (typeof MS !== 'undefined') {
-      var _origSave = MS.saveBooking.bind(MS);
-      MS.saveBooking = async function (data) {
-        var bk = await _origSave(data);
-        if (bk) _latestBookingId = bk.id;
-        return bk;
-      };
-    }
   </script>
 </body>
 

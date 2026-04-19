@@ -260,20 +260,7 @@
                 return;
             }
 
-            const now = Date.now();
-            const inGrace = now >= bk.sessionStart && now <= bk.graceEnd;
-            const canArrive = now >= (bk.sessionStart - 30 * 60 * 1000) && now <= bk.graceEnd; // 30 min early allowed
 
-            let arrivalHTML = '';
-            if (bk.arrived) {
-                arrivalHTML = `<div class="arrived-confirmed">✅ Checked In — Enjoy your meal!</div>`;
-            } else if (canArrive) {
-                arrivalHTML = `<button class="btn-arrived" id="arrivedBtn" onclick="handleArrival('${bk.id}')">
-          &#9679; I've Arrived
-        </button>`;
-            } else if (now < bk.sessionStart - 30 * 60 * 1000) {
-                arrivalHTML = `<span style="font-size:13px; color:rgba(255,255,255,0.4);">Check-in opens 30 min before your slot</span>`;
-            }
 
             area.innerHTML = `
         <div class="active-booking-card">
@@ -307,8 +294,6 @@
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-              ${arrivalHTML}
-              ${inGrace && !bk.arrived ? `<span style="font-size:12px; color:#fbbf24;">⚠ Grace period active — please check in</span>` : ''}
             </div>
           </div>
         </div>`;
@@ -354,19 +339,6 @@
             timerInterval = setInterval(tick, 1000);
         }
 
-        async function handleArrival(bookingId) {
-            const btn = document.getElementById('arrivedBtn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
-            const result = await MS.markArrived(bookingId);
-            if (result) {
-                await renderActiveBooking();
-                await renderHistory();
-            } else {
-                alert('Check-in window has passed or is not yet open.');
-                if (btn) { btn.disabled = false; btn.textContent = "I've Arrived"; }
-            }
-        }
-
         // ---- Booking History ----
         async function renderHistory() {
             const area = document.getElementById('bookingHistoryArea');
@@ -385,8 +357,6 @@
                     statusClass = 'upcoming'; statusText = 'Upcoming';
                 } else if (now < bk.sessionEnd) {
                     statusClass = 'active'; statusText = 'Active';
-                } else if (bk.arrived) {
-                    statusClass = 'arrived'; statusText = 'Visited';
                 } else {
                     statusClass = 'past'; statusText = 'Past';
                 }
