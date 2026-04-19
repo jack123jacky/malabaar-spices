@@ -1,9 +1,9 @@
 # ADMIN DASHBOARD - SETUP COMPLETE
 
 ## Access Information
-- **URL**: `http://localhost:8080/admin.html`
-- **Username**: `admin1234`
-- **Password**: `kuzhikandathil@123`
+- **URL**: `/admin.html`
+- **Username**: Set via `ADMIN_USERNAME` in `backend/.env`
+- **Password**: Set via `ADMIN_PASSWORD` in `backend/.env`
 
 ## Created Files
 
@@ -107,10 +107,10 @@
 - **API**: RESTful JSON API with CORS enabled
 
 ## Security Features
-- Admin login authentication
-- Session management (sessionStorage)
-- Password protected (/admin route)
-- Hardcoded admin credentials
+- Admin login with credentials stored in environment variables
+- JWT token-based session (8-hour expiry)
+- All `/api/admin/*` routes protected by JWT middleware
+- Password never stored in source code
 
 ## Database Collections
 - Users - Store user information
@@ -123,9 +123,9 @@
 ## How to Use
 
 ### Login to Admin Dashboard
-1. Navigate to `http://localhost:8080/admin.html`
-2. Enter username: `admin1234`
-3. Enter password: `kuzhikandathil@123`
+1. Navigate to `/admin.html`
+2. Enter your configured username (`ADMIN_USERNAME` from `.env`)
+3. Enter your configured password (`ADMIN_PASSWORD` from `.env`)
 4. Click Login
 
 ### Manage Orders

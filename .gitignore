@@ -2,7 +2,7 @@
 node_modules/
 backend/node_modules/
 
-# Environment variables (NEVER commit passwords)
+# Environment variables (NEVER commit real secrets)
 .env
 backend/.env
 
@@ -13,9 +13,14 @@ rest-Malabar-/
 Restaurant_website/
 malabaaar-spices/
 
-# Logs
+# Logs & debug output
 *.log
 out.log
+backend/out.log
+
+# Dev/test scripts (not for production)
+backend/test.js
+backend/double_booking_test.js
 
 # OS files
 .DS_Store

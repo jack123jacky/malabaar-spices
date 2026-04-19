@@ -4,13 +4,24 @@
 
 const ADMIN = {
     API_URL: 'https://malabar-spice-backend.onrender.com/api',
-    ADMIN_CREDENTIALS: {
-        username: 'admin1234',
-        password: 'kuzhikandathil@123'
-    },
     isLoggedIn: false,
     currentBooking: null,
     currentMenuItem: null,
+
+    // Returns Authorization header using stored JWT token
+    getAuthHeaders() {
+        const token = sessionStorage.getItem('adminToken');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    },
+
+    // Handle 401 responses — token expired or invalid
+    handle401() {
+        alert('Session expired. Please log in again.');
+        this.logout();
+    },
 
     // ---- Initialize ----
     init() {
@@ -220,6 +231,7 @@ const ADMIN = {
 
     logout() {
         sessionStorage.removeItem('adminLoggedIn');
+        sessionStorage.removeItem('adminToken');
         this.isLoggedIn = false;
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('adminDashboard').style.display = 'none';
@@ -254,8 +266,10 @@ const ADMIN = {
     async loadBookings() {
         try {
             const response = await fetch(`${this.API_URL}/admin/bookings`, {
-                method: 'GET'
+                method: 'GET',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const bookings = await response.json();
             this.displayBookings(bookings);
         } catch (err) {
@@ -312,7 +326,10 @@ const ADMIN = {
 
     async openBookingDetails(bookingId) {
         try {
-            const response = await fetch(`${this.API_URL}/admin/bookings/${bookingId}`);
+            const response = await fetch(`${this.API_URL}/admin/bookings/${bookingId}`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const booking = await response.json();
             this.currentBooking = booking;
 
@@ -378,8 +395,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/bookings/${this.currentBooking.id}/cancel`, {
-                method: 'POST'
+                method: 'POST',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -398,8 +417,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/bookings/${this.currentBooking.id}/arrived`, {
-                method: 'POST'
+                method: 'POST',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -443,7 +464,10 @@ const ADMIN = {
     // ---- TIME SLOTS ----
     async loadTimeSlots() {
         try {
-            const response = await fetch(`${this.API_URL}/admin/timeslots`);
+            const response = await fetch(`${this.API_URL}/admin/timeslots`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const slots = await response.json();
             this.displayTimeSlots(slots);
         } catch (err) {
@@ -487,9 +511,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/timeslots`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify({ startTime, endTime, capacity })
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -507,8 +532,10 @@ const ADMIN = {
 
     async openEditTimeSlot(id) {
         try {
-            const response = await fetch(`${this.API_URL}/admin/timeslots/${id}`);
-            if (!response.ok) throw new Error('Failed to fetch slot');
+            const response = await fetch(`${this.API_URL}/admin/timeslots/${id}`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const slot = await response.json();
             
             document.getElementById('editSlotId').value = slot._id;
@@ -537,9 +564,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/timeslots/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify({ startTime, endTime, capacity })
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -560,8 +588,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/timeslots/${slotId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -575,10 +605,13 @@ const ADMIN = {
         }
     },
 
-    // ---- TABLES ----
+    // ---- MENU ----
     async loadMenuItems() {
         try {
-            const response = await fetch(`${this.API_URL}/admin/menu`);
+            const response = await fetch(`${this.API_URL}/admin/menu`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const items = await response.json();
             this.displayMenuItems(items);
         } catch (err) {
@@ -644,9 +677,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/menu`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify({ name, category, price, description, calories, veg, image })
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -671,7 +705,10 @@ const ADMIN = {
 
     async openEditMenu(id) {
         try {
-            const response = await fetch(`${this.API_URL}/admin/menu/${id}`);
+            const response = await fetch(`${this.API_URL}/admin/menu/${id}`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const item = await response.json();
             
             this.currentMenuItem = item;
@@ -710,9 +747,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/menu/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify(updatedData)
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -731,8 +769,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/menu/${itemId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -747,7 +787,10 @@ const ADMIN = {
     // ---- GALLERY ----
     async loadGalleryImages() {
         try {
-            const response = await fetch(`${this.API_URL}/admin/gallery`);
+            const response = await fetch(`${this.API_URL}/admin/gallery`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const images = await response.json();
             this.displayGalleryImages(images);
         } catch (err) {
@@ -799,9 +842,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/gallery`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify({ title, caption, image })
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -819,7 +863,10 @@ const ADMIN = {
 
     async openEditGallery(id) {
         try {
-            const response = await fetch(`${this.API_URL}/admin/gallery/${id}`);
+            const response = await fetch(`${this.API_URL}/admin/gallery/${id}`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const image = await response.json();
             
             document.getElementById('editGalleryId').value = image._id;
@@ -853,9 +900,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/gallery/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify(updatedData)
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -876,8 +924,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/gallery/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -892,7 +942,10 @@ const ADMIN = {
     // ---- FEATURES ----
     async loadFeatures() {
         try {
-            const response = await fetch(`${this.API_URL}/admin/features`);
+            const response = await fetch(`${this.API_URL}/admin/features`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const features = await response.json();
             this.displayFeatures(features);
         } catch (err) {
@@ -941,9 +994,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/features`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify({ title, description, icon })
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -961,7 +1015,10 @@ const ADMIN = {
 
     async openEditFeature(id) {
         try {
-            const response = await fetch(`${this.API_URL}/admin/features/${id}`);
+            const response = await fetch(`${this.API_URL}/admin/features/${id}`, {
+                headers: this.getAuthHeaders()
+            });
+            if (response.status === 401) { this.handle401(); return; }
             const feature = await response.json();
             
             document.getElementById('editFeatureId').value = feature._id;
@@ -993,9 +1050,10 @@ const ADMIN = {
         try {
             const response = await fetch(`${this.API_URL}/admin/features/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.getAuthHeaders(),
                 body: JSON.stringify(updatedData)
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
@@ -1016,8 +1074,10 @@ const ADMIN = {
 
         try {
             const response = await fetch(`${this.API_URL}/admin/features/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: this.getAuthHeaders()
             });
+            if (response.status === 401) { this.handle401(); return; }
             const result = await response.json();
             
             if (result.success) {
