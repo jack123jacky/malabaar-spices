@@ -160,8 +160,51 @@ app.post('/api/user/name', async (req, res) => {
 });
 
 // Bookings
+// GET /api/bookings/availability?date=YYYY-MM-DD&time=HH:MM
+// Returns all tableNums already booked for a given date+time combination
+app.get('/api/bookings/availability', async (req, res) => {
+    const { date, time } = req.query;
+    if (!date || !time) {
+        return res.status(400).json({ error: 'date and time query params are required' });
+    }
+    try {
+        // Find all bookings on this date+time that are still active (not cancelled)
+        const bookings = await Booking.find({ date, time });
+        // Flatten all booked table numbers into a single array
+        const bookedTableNums = bookings.flatMap(b => b.tableNums || []);
+        res.json({ date, time, bookedTableNums });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.post('/api/bookings', async (req, res) => {
     try {
+        const { date, time, tableNums } = req.body;
+
+        // ---- Double-booking guard ----
+        // Check if any of the requested tables are already booked for the same date+time
+        if (date && time && Array.isArray(tableNums) && tableNums.length > 0) {
+            const conflictingBookings = await Booking.find({
+                date,
+                time,
+                tableNums: { $elemMatch: { $in: tableNums } }
+            });
+
+            if (conflictingBookings.length > 0) {
+                // Collect which tables have conflicts
+                const conflictedTables = conflictingBookings
+                    .flatMap(b => b.tableNums)
+                    .filter(t => tableNums.includes(t));
+
+                return res.status(409).json({
+                    error: 'double_booking',
+                    message: `Table(s) ${[...new Set(conflictedTables)].join(', ')} are already booked for ${date} at ${time}. Please choose different tables.`,
+                    conflictedTables: [...new Set(conflictedTables)]
+                });
+            }
+        }
+
         const booking = new Booking(req.body);
         await booking.save();
         res.json({ success: true, booking });

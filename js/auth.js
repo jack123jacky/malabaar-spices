@@ -93,12 +93,22 @@ const MS = {
         };
 
         try {
-            await fetch(`${this.API_URL}/bookings`, {
+            const res = await fetch(`${this.API_URL}/bookings`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(booking)
             });
-        } catch (e) { console.error('Failed to save booking to DB', e); }
+            if (res.status === 409) {
+                // Double-booking conflict detected by the backend
+                const errData = await res.json();
+                return { conflict: true, message: errData.message, conflictedTables: errData.conflictedTables };
+            }
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                console.error('Failed to save booking:', errData);
+                return null;
+            }
+        } catch (e) { console.error('Failed to save booking to DB', e); return null; }
         
         return booking;
     },

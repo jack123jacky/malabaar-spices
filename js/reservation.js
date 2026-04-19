@@ -38,11 +38,16 @@ const TABLES = [
     { id: 't12', num: 12, seats: 2, shape: 'round', zone: 'outdoor', zoneLabel: '🌿 Outdoor / Garden' },
 ];
 
-/* Simulated pre-existing reservations (date → slotId → [tableId]) */
+/* Live bookings loaded from DB (date → slotLabel → [tableNum]) */
 const EXISTING_BOOKINGS = {};
 
 /* Grace-period tracking: bookingKey → timer references */
 const GRACE_TIMERS = {};
+
+/* Backend API base URL - keep in sync with auth.js */
+const API_URL = (typeof MS !== 'undefined' && MS.API_URL)
+    ? MS.API_URL
+    : 'https://malabar-spice-backend.onrender.com/api';
 
 /* ---- 2. STATE ---- */
 let selectedDate = '';
@@ -105,7 +110,7 @@ function renderTimeSlots() {
     });
 }
 
-function selectSlot(slot) {
+async function selectSlot(slot) {
     selectedSlot = slot;
     selectedTables = [];
 
@@ -114,9 +119,42 @@ function selectSlot(slot) {
     const btn = document.getElementById('slot-' + slot.id);
     if (btn) btn.classList.add('ts-selected');
 
+    // --- Load real bookings from DB for this date + slot ---
+    await loadBookedTablesFromDB(selectedDate, slot);
+
     renderFloorPlan();
     hideTableInfoBar();
     updateSummary();
+}
+
+/**
+ * Fetches already-booked tableNums from the backend for a given date + time slot
+ * and stores them in EXISTING_BOOKINGS so the floor plan can show correct status.
+ */
+async function loadBookedTablesFromDB(date, slot) {
+    if (!date || !slot) return;
+    // Use the formatted date string that is stored in the DB (e.g. "Sunday, 20 April 2025")
+    const dateFormatted = new Date(date + 'T00:00:00').toLocaleDateString('en-IN', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    try {
+        const url = `${API_URL}/bookings/availability?date=${encodeURIComponent(dateFormatted)}&time=${encodeURIComponent(slot.label)}`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+        // Map table numbers back to table IDs
+        // data.bookedTableNums is like ["T1", "T3", "T7"]
+        const bookedIds = (data.bookedTableNums || []).map(num => {
+            const match = TABLES.find(t => 'T' + t.num === num);
+            return match ? match.id : null;
+        }).filter(Boolean);
+
+        // Store in EXISTING_BOOKINGS under the slot ID
+        if (!EXISTING_BOOKINGS[date]) EXISTING_BOOKINGS[date] = {};
+        EXISTING_BOOKINGS[date][slot.id] = bookedIds;
+    } catch (e) {
+        console.warn('Could not load booked tables from DB:', e);
+    }
 }
 
 /* ---- 6. FLOOR PLAN ---- */
@@ -305,10 +343,14 @@ async function handleReservation(e) {
         flashMsg('Please pick a reservation date.', 'warn'); return;
     }
 
-    // Double-booking check for ALL selected tables
+    // --- Step 1: Re-fetch latest bookings from DB before submitting ---
+    // This catches any bookings made by other users since the page was last refreshed
+    await loadBookedTablesFromDB(selectedDate, selectedSlot);
+
+    // --- Step 2: Local (in-memory) double-booking check ---
     const alreadyBooked = selectedTables.filter(t => isTableBooked(t.id, selectedDate, selectedSlot.id));
     if (alreadyBooked.length > 0) {
-        flashMsg(`Table(s) ${alreadyBooked.map(t => 'T' + t.num).join(', ')} are no longer available. Please reselect.`, 'error');
+        flashMsg(`Table(s) ${alreadyBooked.map(t => 'T' + t.num).join(', ')} were just booked by someone else. Please reselect.`, 'error');
         selectedTables = selectedTables.filter(t => !alreadyBooked.some(b => b.id === t.id));
         renderFloorPlan();
         showTableInfoBar();
@@ -321,25 +363,19 @@ async function handleReservation(e) {
     const guests = document.getElementById('guests').value;
     const specialReq = document.getElementById('specialReq').value.trim();
 
-    // Save bookings for all selected tables
-    if (!EXISTING_BOOKINGS[selectedDate]) EXISTING_BOOKINGS[selectedDate] = {};
-    if (!EXISTING_BOOKINGS[selectedDate][selectedSlot.id]) EXISTING_BOOKINGS[selectedDate][selectedSlot.id] = [];
-
-    selectedTables.forEach(table => {
-        EXISTING_BOOKINGS[selectedDate][selectedSlot.id].push(table.id);
-        const bookingKey = `${selectedDate}_${selectedSlot.id}_${table.id}`;
-        startGracePeriod(bookingKey, selectedDate, selectedSlot.id, table.id);
-    });
-
-    // ---- Save to user account ----
     const slotStart = getSlotStartDate(selectedDate, selectedSlot.id);
     const tableNums = selectedTables.map(t => 'T' + t.num);
     const zones = [...new Set(selectedTables.map(t => t.zoneLabel))].join(', ');
+    const dateFormatted = new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
 
+    // --- Step 3: Save to DB (backend enforces uniqueness as a final safety net) ---
+    let savedSuccessfully = false;
     if (typeof MS !== 'undefined' && MS.isLoggedIn()) {
         MS.updateName(firstName + ' ' + lastName);
-        await MS.saveBooking({
-            date: new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+        const result = await MS.saveBooking({
+            date: dateFormatted,
             time: selectedSlot.label,
             tableNums,
             zone: zones,
@@ -348,7 +384,45 @@ async function handleReservation(e) {
             sessionStart: slotStart.getTime(),
             sessionEnd: slotStart.getTime() + 2 * 60 * 60 * 1000
         });
+        if (result && result.conflict) {
+            // Backend rejected due to conflict (409)
+            flashMsg(result.message || 'One or more tables are already booked. Please choose different tables.', 'error');
+            // Refresh the floor plan to show current availability
+            await loadBookedTablesFromDB(selectedDate, selectedSlot);
+            selectedTables = [];
+            renderFloorPlan();
+            hideTableInfoBar();
+            return;
+        }
+        savedSuccessfully = !!result;
+    } else {
+        // Guest (not logged in): still do a backend availability check before accepting
+        try {
+            const checkRes = await fetch(`${API_URL}/bookings/availability?date=${encodeURIComponent(dateFormatted)}&time=${encodeURIComponent(selectedSlot.label)}`);
+            const checkData = await checkRes.json();
+            const conflicted = tableNums.filter(n => (checkData.bookedTableNums || []).includes(n));
+            if (conflicted.length > 0) {
+                flashMsg(`Table(s) ${conflicted.join(', ')} are no longer available. Please reselect.`, 'error');
+                await loadBookedTablesFromDB(selectedDate, selectedSlot);
+                selectedTables = selectedTables.filter(t => !conflicted.includes('T' + t.num));
+                renderFloorPlan();
+                showTableInfoBar();
+                return;
+            }
+        } catch (e) { /* proceed — backend will reject if conflict */ }
+        savedSuccessfully = false; // Guest bookings are informational only
     }
+
+    // --- Step 4: Update local cache so the floor plan reflects this new booking immediately ---
+    if (!EXISTING_BOOKINGS[selectedDate]) EXISTING_BOOKINGS[selectedDate] = {};
+    if (!EXISTING_BOOKINGS[selectedDate][selectedSlot.id]) EXISTING_BOOKINGS[selectedDate][selectedSlot.id] = [];
+    selectedTables.forEach(table => {
+        if (!EXISTING_BOOKINGS[selectedDate][selectedSlot.id].includes(table.id)) {
+            EXISTING_BOOKINGS[selectedDate][selectedSlot.id].push(table.id);
+        }
+        const bookingKey = `${selectedDate}_${selectedSlot.id}_${table.id}`;
+        startGracePeriod(bookingKey, selectedDate, selectedSlot.id, table.id);
+    });
 
     // Show success
     showSuccess(firstName, lastName, phone, guests);
